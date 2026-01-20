@@ -5,7 +5,7 @@ struct DropdownMenu_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 30) {
             VStack(alignment: .leading, spacing: 10) {
-                Text("Windows - Light")
+                Text("Variant - Light")
                     .font(.headline)
                 DropdownMenu(
                     buttonText: "Click me",
@@ -17,7 +17,7 @@ struct DropdownMenu_Previews: PreviewProvider {
             .background(Color(red: 0.961, green: 0.965, blue: 0.984))
             
             VStack(alignment: .leading, spacing: 10) {
-                Text("Windows - Dark")
+                Text("Variant - Dark")
                     .font(.headline)
                     .foregroundColor(.white)
                 DropdownMenu(

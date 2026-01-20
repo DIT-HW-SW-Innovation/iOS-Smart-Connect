@@ -1,36 +1,41 @@
-# SC-iOS Project Structure
+# Project structure (developer notes)
+
+This document is a map of the repository for anyone integrating or extending `SCComponents`.
+
+Because the package is not yet fully verified in a host application, treat anything that depends on build settings / SPM resource packaging / preview behavior as **“verify locally in Xcode”**.
+
+## Top level
 
 ```
 SC-iOS/
-├── Package.swift                    # Swift Package Manager configuration
-├── README.md                        # Project documentation
-├── SETUP.md                         # Setup instructions
-├── .gitignore                       # Git ignore rules
-├── .storybook/                      # Storybook configuration (if using)
-│   └── main.ts
+├── Package.swift                    # Swift Package Manager configuration (source of truth)
+├── README.md                        # Developer-oriented overview
+├── SETUP.md                         # Setup notes (may need adjustment for your environment)
+├── PROJECT_STRUCTURE.md             # This file
+├── .gitignore
 │
 ├── Sources/
-│   └── SCComponents/                # Main package source
-│       ├── SCComponentsApp.swift   # Demo app entry point
-│       ├── IconRegistry.swift      # Icon name definitions
+│   └── SCComponents/                # Package module: `SCComponents`
+│       ├── SCComponentsApp.swift    # Demo entry point / sandbox (if used)
+│       ├── IconRegistry.swift       # Icon name definitions / registry
 │       │
 │       ├── Components/              # SwiftUI components
-│       │   ├── Icon.swift          # Icon component
-│       │   ├── FilterChip.swift    # FilterChip component
-│       │   └── DropdownMenu.swift  # DropdownMenu component
+│       │   ├── Icon.swift
+│       │   ├── FilterChip.swift
+│       │   └── DropdownMenu.swift
 │       │
-│       ├── Stories/                 # Story/Preview files
-│       │   ├── FilterChipExample.swift          # FilterChipExample view
-│       │   ├── FilterChip.stories.swift         # FilterChip previews
-│       │   ├── FilterChipExample.stories.swift # FilterChipExample previews
-│       │   └── DropdownMenu.stories.swift       # DropdownMenu previews
+│       ├── Stories/                 # Preview/example views for manual inspection
+│       │   ├── FilterChipExample.swift
+│       │   ├── FilterChip.stories.swift
+│       │   ├── FilterChipExample.stories.swift
+│       │   └── DropdownMenu.stories.swift
 │       │
-│       ├── Assets/                  # Image assets
+│       ├── Assets/                  # Image resources (verify they’re packaged + load correctly)
 │       │   ├── lenovo_tabp12.png
 │       │   ├── lenovo_thinkpad.png
 │       │   └── moto_edge_60_pro.png
 │       │
-│       └── Icons/                   # SVG icon assets
+│       └── Icons/                   # Icon resources (verify naming + loading path)
 │           ├── audio.svg
 │           ├── documents.svg
 │           ├── downloads.svg
@@ -43,25 +48,28 @@ SC-iOS/
 │           ├── videos.svg
 │           └── wallpaper.svg
 │
-└── Tests/                           # Unit tests (to be added)
+└── Tests/                           # Unit tests (currently minimal / placeholder)
 ```
 
-## Component Files
+## Key files
 
-### Core Components
-- **Icon.swift**: Renders SVG icons from assets
-- **FilterChip.swift**: Filter chip with text-only, PNG-text, and SVG-text variants
-- **DropdownMenu.swift**: Dropdown menu with Windows, Android, and iOS variants
+### `Package.swift`
 
-### Stories/Examples
-- **FilterChipExample.swift**: Interactive example showing FilterChip usage
-- **FilterChip.stories.swift**: Xcode Previews for FilterChip
-- **FilterChipExample.stories.swift**: Xcode Previews for FilterChipExample
-- **DropdownMenu.stories.swift**: Xcode Previews for DropdownMenu
+- Defines the `SCComponents` module, its targets, and how resources are bundled.
+- If something doesn’t load at runtime (especially assets), start your investigation here.
 
-## Notes
+### `Sources/SCComponents/Components/*`
 
-- All components use SwiftUI
-- Components are public for external use
-- Xcode Previews are used instead of Storybook (more standard for SwiftUI)
-- Assets are included in the package resources
+- `FilterChip.swift`: chip UI and interaction/state handling.
+- `DropdownMenu.swift`: menu UI and variant styling (see the `Variant` type in code rather than relying on docs).
+- `Icon.swift`: icon rendering logic; behavior depends on how icons are packaged and resolved.
+
+### `Sources/SCComponents/Stories/*`
+
+- Intended for manual inspection via Xcode previews and/or a small sandbox.
+- Treat these as examples/templates, not as a formal test suite.
+
+## Notes / assumptions to validate
+
+- Resources under `Assets/` and `Icons/` are expected to be packaged via Swift Package resources; confirm at runtime in your integration target.
+- Preview behavior can differ from real runtime behavior (especially around resources and layout). Always validate in a host app for final UI.

@@ -64,8 +64,7 @@ FilterChip(
 // DropdownMenu
 DropdownMenu(
     buttonText: "Click me",
-    theme: .light,
-    variant: .windows
+    theme: .light
 )
 
 // FilterChipExample

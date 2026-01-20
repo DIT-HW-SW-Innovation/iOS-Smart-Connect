@@ -51,7 +51,7 @@ SC-iOS/
 - ✅ Click handling
 
 ### 3. DropdownMenu Component
-- ✅ Windows, Android, iOS variants
+- ✅ Multiple style variants (see `DropdownVariant` in code)
 - ✅ Light and dark themes
 - ✅ Menu items with icons
 - ✅ Separator support

@@ -1,118 +1,56 @@
-# SC-iOS Components
+# SC iOS Components (SwiftUI)
 
-Swift/SwiftUI version of the SC components, targeting both iOS and macOS.
+This repository contains a Swift Package (`SCComponents`) that implements a small set of UI components in SwiftUI.
 
-## Components
+This project is **not yet verified in a real app build**. Please treat it as a starting point and validate behavior, layout, and assets in your local Xcode environment before shipping anything.
 
-- **FilterChip**: A filter chip component with text-only, PNG-text, and SVG-text variants
-- **DropdownMenu**: A dropdown menu component with Windows, Android, and iOS variants
-- **Icon**: An icon component that renders SVG icons
-- **FilterChipExample**: Example view demonstrating FilterChip usage
+## What’s in here
 
-## Project Structure
+- **`FilterChip`**: a chip-style control with multiple presentation variants and visual states.
+- **`DropdownMenu`**: a dropdown menu component with multiple style variants (see `DropdownMenu.Variant` in code).
+- **`Icon`**: a small icon view backed by the icon registry and packaged resources (see `IconRegistry.swift` and the `Icons/` folder).
+- **Examples/Previews**: views intended for manual inspection in Xcode previews (see `Sources/SCComponents/Stories/`).
 
+## Requirements (expected)
+
+- Xcode (recent version)
+- Swift 5.9+
+- Deployment targets are declared in `Package.swift` (use that as the source of truth)
+
+## Using the package in an app
+
+Use Xcode’s “Add Package Dependencies…” and point to this repo folder as a **local** package, then import `SCComponents`.
+
+Minimal usage example:
+
+```swift
+import SCComponents
+
+FilterChip(
+    text: "Example",
+    variant: .textOnly,
+    stage: .enabled,
+    theme: .light
+)
 ```
-SC-iOS/
-├── Sources/
-│   └── SCComponents/
-│       ├── Components/
-│       │   ├── Icon.swift
-│       │   ├── FilterChip.swift
-│       │   └── DropdownMenu.swift
-│       ├── Stories/
-│       │   └── FilterChipExample.swift
-│       ├── IconRegistry.swift
-│       └── Assets/          # Image assets
-│       └── Icons/           # SVG icon assets
-├── Tests/
-├── Package.swift
-└── README.md
-```
 
-## Requirements
+## Assets and resources (please verify locally)
 
-- Xcode 14.0 or later
-- Swift 5.9 or later
-- iOS 15.0+ / macOS 12.0+
+This package includes image/icon resources under `Sources/SCComponents/Assets/` and `Sources/SCComponents/Icons/`.
 
-## Setup
+Before relying on them, please confirm:
 
-### Using Swift Package Manager
+- The resources are included in the built product (SPM resources behavior can differ depending on how you integrate).
+- The `Icon` component resolves the expected icon names for your usage.
+- Any images referenced by components exist and load correctly at runtime.
 
-1. Open Xcode
-2. File → New → Project
-3. Select "Swift Package"
-4. Add this package as a dependency
+## Development notes
 
-### Using Xcode Project
+- If you add/rename icons, update the registry in `Sources/SCComponents/IconRegistry.swift`.
+- Keep changes small and test frequently with Xcode previews and/or a small host app.
+- If something looks “almost right”, prefer filing an issue with screenshots and device/OS info rather than guessing at values.
 
-1. Open the project in Xcode
-2. Build the project (Cmd+B)
-3. Run Storybook (if configured)
+## What this README is (and isn’t)
 
-## Components Overview
-
-### FilterChip
-
-A filter chip component with three variants:
-- `textOnly`: Text only
-- `pngText`: PNG image + text
-- `svgText`: SVG icon + text
-
-States: `enabled`, `hovered`, `selected`
-Themes: `light`, `dark`
-
-### DropdownMenu
-
-A dropdown menu component with platform variants:
-- `windows`: Windows style
-- `android`: Android style
-- `iOS`: iOS style
-
-Themes: `light`, `dark`
-
-### Icon
-
-Renders SVG icons from the icon registry. Icons are loaded from the Assets/Icons folder.
-
-## Storybook for SwiftUI
-
-This project is set up to work with Storybook for SwiftUI. To use Storybook:
-
-1. Install Storybook for SwiftUI dependencies
-2. Configure your Xcode project to use Storybook
-3. Create story files in the Stories directory
-
-**Note**: Storybook for SwiftUI setup requires additional configuration. See the Storybook documentation for SwiftUI setup instructions.
-
-## Differences from Vue Version
-
-1. **State Management**: Uses SwiftUI's `@State` instead of Vue's `ref`
-2. **Styling**: Uses SwiftUI modifiers instead of CSS
-3. **Icons**: Icons are loaded as image assets instead of inline SVG
-4. **Platform**: Native iOS/macOS instead of web
-
-## Development
-
-### Adding New Components
-
-1. Create a new Swift file in `Sources/SCComponents/Components/`
-2. Follow the existing component patterns
-3. Add public access modifiers for external use
-
-### Adding Assets
-
-1. Add images to `Sources/SCComponents/Assets/`
-2. Add icons to `Sources/SCComponents/Icons/`
-3. Update `Package.swift` if needed
-
-## Testing
-
-Tests can be added in the `Tests/` directory. Use XCTest for unit tests.
-
-## Notes
-
-- This project was untested
-- Some adjustments may be needed when testing
-- Icon assets need to be added to the Icons folder
-- Image assets need to be added to the Assets folder
+- **Is**: a high-level guide for developers integrating or extending the package.
+- **Isn’t**: a claim that the package is production-ready or fully tested.
