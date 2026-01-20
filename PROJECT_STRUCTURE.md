@@ -1,75 +1,86 @@
-# Project structure (developer notes)
+# SC iOS Project Structure
 
-This document is a map of the repository for anyone integrating or extending `SCComponents`.
+This document describes the structure of the `SCComponents` Swift package. The layout follows common Swift Package conventions, with the goal of keeping components, examples, and resources easy to find.
 
-Because the package is not yet fully verified in a host application, treat anything that depends on build settings / SPM resource packaging / preview behavior as **“verify locally in Xcode”**.
+Because the package is not yet fully verified in a host application, treat anything involving resources and preview/runtime behavior as **verify locally in Xcode**.
 
-## Top level
+## Why This Structure?
+
+- Keep reusable SwiftUI components isolated under one module (`SCComponents`)
+- Keep example/previews separate from the components themselves
+- Keep resources (images/icons) packaged alongside the module
+
+## The Main Folders
 
 ```
 SC-iOS/
-├── Package.swift                    # Swift Package Manager configuration (source of truth)
-├── README.md                        # Developer-oriented overview
-├── SETUP.md                         # Setup notes (may need adjustment for your environment)
-├── PROJECT_STRUCTURE.md             # This file
+├── Package.swift                      # Swift Package Manager configuration
+├── README.md                          # Project overview (developer-facing)
+├── SETUP.md                           # Setup notes (may need adjustment)
+├── PROJECT_STRUCTURE.md               # This file
 ├── .gitignore
 │
 ├── Sources/
-│   └── SCComponents/                # Package module: `SCComponents`
-│       ├── SCComponentsApp.swift    # Demo entry point / sandbox (if used)
-│       ├── IconRegistry.swift       # Icon name definitions / registry
-│       │
-│       ├── Components/              # SwiftUI components
-│       │   ├── Icon.swift
+│   └── SCComponents/                  # Module source: `SCComponents`
+│       ├── Components/                # SwiftUI components
 │       │   ├── FilterChip.swift
-│       │   └── DropdownMenu.swift
+│       │   ├── DropdownMenu.swift
+│       │   └── Icon.swift
 │       │
-│       ├── Stories/                 # Preview/example views for manual inspection
+│       ├── Stories/                   # Examples / Xcode previews (manual inspection)
 │       │   ├── FilterChipExample.swift
 │       │   ├── FilterChip.stories.swift
 │       │   ├── FilterChipExample.stories.swift
 │       │   └── DropdownMenu.stories.swift
 │       │
-│       ├── Assets/                  # Image resources (verify they’re packaged + load correctly)
-│       │   ├── lenovo_tabp12.png
-│       │   ├── lenovo_thinkpad.png
-│       │   └── moto_edge_60_pro.png
-│       │
-│       └── Icons/                   # Icon resources (verify naming + loading path)
-│           ├── audio.svg
-│           ├── documents.svg
-│           ├── downloads.svg
-│           ├── images.svg
-│           ├── link_off.svg
-│           ├── menu.svg
-│           ├── notification_off.svg
-│           ├── recent.svg
-│           ├── settings.svg
-│           ├── videos.svg
-│           └── wallpaper.svg
+│       ├── Assets/                    # PNG resources (verify they bundle + load)
+│       ├── Icons/                     # SVG icon files (verify naming + loading)
+│       ├── IconRegistry.swift         # Icon name definitions / registry
+│       └── SCComponentsApp.swift      # Demo entry point / sandbox (if used)
 │
-└── Tests/                           # Unit tests (currently minimal / placeholder)
+└── Tests/                             # Unit tests (currently minimal / placeholder)
 ```
 
-## Key files
+## The Components
 
-### `Package.swift`
+### FilterChip
 
-- Defines the `SCComponents` module, its targets, and how resources are bundled.
-- If something doesn’t load at runtime (especially assets), start your investigation here.
+Located at `Sources/SCComponents/Components/FilterChip.swift`.
 
-### `Sources/SCComponents/Components/*`
+Notes:
+- Supports multiple variants and interaction stages.
+- Validate behavior in a host app, not only previews.
 
-- `FilterChip.swift`: chip UI and interaction/state handling.
-- `DropdownMenu.swift`: menu UI and variant styling (see the `Variant` type in code rather than relying on docs).
-- `Icon.swift`: icon rendering logic; behavior depends on how icons are packaged and resolved.
+### DropdownMenu
 
-### `Sources/SCComponents/Stories/*`
+Located at `Sources/SCComponents/Components/DropdownMenu.swift`.
 
-- Intended for manual inspection via Xcode previews and/or a small sandbox.
-- Treat these as examples/templates, not as a formal test suite.
+Notes:
+- Styling is controlled by a variant type in code.
+- Verify menu open/close behavior and layout in your integration target.
 
-## Notes / assumptions to validate
+### Icon + IconRegistry
 
-- Resources under `Assets/` and `Icons/` are expected to be packaged via Swift Package resources; confirm at runtime in your integration target.
-- Preview behavior can differ from real runtime behavior (especially around resources and layout). Always validate in a host app for final UI.
+Located at:
+- `Sources/SCComponents/Components/Icon.swift`
+- `Sources/SCComponents/IconRegistry.swift`
+
+Notes:
+- If an icon doesn’t render, confirm the name exists in the registry and that resources are bundled via `Package.swift`.
+
+## Resources
+
+### Assets (`Assets/`)
+
+PNG images intended for component examples and/or UI.
+
+### Icons (`Icons/`)
+
+SVG icon files used by the icon system.
+
+Because resource loading depends on how the package is integrated, always validate runtime loading in your app target.
+
+## Notes
+
+- `Stories/` are examples/templates for manual inspection; they are not a test suite.
+- If you change resource names or add new ones, keep `IconRegistry.swift` in sync.
