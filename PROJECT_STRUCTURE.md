@@ -16,7 +16,7 @@ Because the package is not yet fully verified in a host application, treat anyth
 SC-iOS/
 ├── Package.swift                      # Swift Package Manager configuration
 ├── README.md                          # Project overview (developer-facing)
-├── SETUP.md                           # Setup notes (may need adjustment)
+├── (optional) setup notes             # If you keep a separate setup doc, list it here
 ├── PROJECT_STRUCTURE.md               # This file
 ├── .gitignore
 │
